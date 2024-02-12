@@ -1,0 +1,44 @@
+
+#docker-compose up -d
+#docker-compose down
+
+services:
+  mi-mysql-dc:
+    image: mysql
+    ports:
+      - 3306:3306
+    container_name: mi-mysql-dc
+    volumes:
+      - mi-mysql-vol-dc:/var/lid/mysql
+    networks:
+      mi-mysql-red-dc:
+    stdin_open:  true # -i
+    tty:  true # -t
+    environment:
+      - MYSQL_ROOT_PASSWORD=toor
+
+  mi-dashboard-dc:
+    image: phpmyadmin
+    container_name: mi-dashboard-dc
+    ports:
+      - 8080:80
+    networks:
+      mi-mysql-red-dc:
+    
+    
+    environment:
+      - PMA_HOST=mi-mysql-dc
+    stdin_open:  true # -i
+    tty:  true # -t
+
+networks:
+  mi-mysql-red-dc:
+    ipam:
+      driver:  default
+      config:
+        - subnet:  172.25.0.0/16
+
+volumes:
+  mi-mysql-vol-dc:
+
+

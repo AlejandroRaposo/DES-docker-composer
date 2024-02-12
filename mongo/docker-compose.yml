@@ -1,0 +1,40 @@
+
+#docker-compose up -d
+#docker-compose down
+
+services:
+  mi-mongo-dc:
+    image: mongo
+    ports:
+      - 27017:27017
+    container_name: mi-mongo-dc
+    volumes:
+      - mi-mongo-vol-dc:/data/db
+    networks:
+      mi-mongo-red-dc:
+    stdin_open:  true # -i
+    tty:  true # -t
+
+  mi-mongo-express-dc:
+    image: mongo-express
+    container_name: mi-mongo-express-dc
+    ports:
+      - 8081:8081
+    networks:
+      mi-mongo-red-dc:
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mi-mongo-dc
+    stdin_open:  true # -i
+    tty:  true # -t
+
+networks:
+  mi-mongo-red-dc:
+    ipam:
+      driver:  default
+      config:
+        - subnet:  172.100.0.0/16
+
+volumes:
+  mi-mongo-vol-dc:
+
+
